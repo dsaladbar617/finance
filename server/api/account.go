@@ -11,7 +11,7 @@ import (
 type createAccountRequest struct {
 	Username string `json:"username" binding:"required"`
 	FullName string `json:"full_name" binding:"required"`
-	Email string `json:"email" binding:"required"`
+	Email string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required"`
 }
 
@@ -23,10 +23,10 @@ func (server *Server) createAccount(ctx *gin.Context) {
 	}
 
 	arg := db.CreateAccountParams{
-		Username: "dsaladbar",
-		FullName: "Daniel Salazar",
-		Email: "dsalazar219@gmail.com",
-		Password: "secret",
+		Username: req.Username,
+		FullName: req.FullName,
+		Email: req.Email,
+		Password: req.Password,
 	}
 
 	account, err := server.store.CreateAccount(ctx, arg)

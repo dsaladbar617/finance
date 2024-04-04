@@ -1,0 +1,31 @@
+.header {
+  /* display: flex;
+  flex-flow: nowrap row;
+  justify-content: center;
+  align-items: center; */
+  text-align: center;
+  background-color: grey;
+  width: 100vw;
+  height: 5rem;
+  /* padding: 10px; */
+}
+
+.login-container {
+  display: inline-block;
+  float: right;
+  width: 12rem;
+  height: 100%;
+}
+
+.logins {
+  display: flex;
+  height: fit-content;
+  justify-content: space-around;
+}
+
+.title {
+  font-size: xx-large;
+  display: inline;
+  padding: 10px;
+  height: 100%;
+}
