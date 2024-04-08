@@ -1,10 +1,16 @@
+import { Link } from "wouter";
+
 const Header = () => {
   return (
     <div className="header">
-      <div className="title">Finance</div>
+      <Link href="/">
+        <div className="title">Finance</div>
+      </Link>
       <div className="login-container">
         <div className="logins">
-          <button>Sign up</button>
+          <Link href="/signup">
+            <button>Sign up</button>
+          </Link>
           <button>Login</button>
         </div>
       </div>
