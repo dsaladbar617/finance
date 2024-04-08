@@ -10,7 +10,8 @@ import (
 func TestCreateAccount(t *testing.T) {
 	arg := CreateAccountParams{
 		Username: "Dan Salley",
-		FullName: "Daniel Salazar",
+		FirstName: "Daniel",
+		LastName: "Salazar",
 		Email: "dsajkl;f@fsda.com",
 		Password: "secret",
 	}
@@ -20,7 +21,8 @@ func TestCreateAccount(t *testing.T) {
 	require.NotEmpty(t, account)
 
 	require.Equal(t, account.Username, arg.Username )
-	require.Equal(t, account.FullName, arg.FullName )
+	require.Equal(t, account.FirstName, arg.FirstName )
+	require.Equal(t, account.LastName, arg.LastName )
 	require.Equal(t, account.Email, arg.Email )
 	require.Equal(t, account.Password, arg.Password )
 

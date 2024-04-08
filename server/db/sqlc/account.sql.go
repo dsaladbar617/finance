@@ -10,26 +10,29 @@ import (
 const createAccount = `-- name: CreateAccount :one
 INSERT INTO accounts (
   username,
-  full_name,
+  first_name,
+  last_name,
   email,
   password
 ) VALUES (
-  $1, $2, $3, $4
+  $1, $2, $3, $4, $5
 )
-RETURNING id, username, full_name, email, password, created_at
+RETURNING id, username, first_name, last_name, email, password, created_at
 `
 
 type CreateAccountParams struct {
-	Username string `json:"username"`
-	FullName string `json:"full_name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Username  string `json:"username"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
 }
 
 func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error) {
 	row := q.db.QueryRowContext(ctx, createAccount,
 		arg.Username,
-		arg.FullName,
+		arg.FirstName,
+		arg.LastName,
 		arg.Email,
 		arg.Password,
 	)
@@ -37,7 +40,8 @@ func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (A
 	err := row.Scan(
 		&i.ID,
 		&i.Username,
-		&i.FullName,
+		&i.FirstName,
+		&i.LastName,
 		&i.Email,
 		&i.Password,
 		&i.CreatedAt,
@@ -46,17 +50,18 @@ func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (A
 }
 
 const getAccount = `-- name: GetAccount :one
-SELECT id, username, full_name, email, password, created_at FROM accounts
-WHERE id = $1 LIMIT 1
+SELECT id, username, first_name, last_name, email, password, created_at FROM accounts
+WHERE username = $1 LIMIT 1
 `
 
-func (q *Queries) GetAccount(ctx context.Context, id int64) (Account, error) {
-	row := q.db.QueryRowContext(ctx, getAccount, id)
+func (q *Queries) GetAccount(ctx context.Context, username string) (Account, error) {
+	row := q.db.QueryRowContext(ctx, getAccount, username)
 	var i Account
 	err := row.Scan(
 		&i.ID,
 		&i.Username,
-		&i.FullName,
+		&i.FirstName,
+		&i.LastName,
 		&i.Email,
 		&i.Password,
 		&i.CreatedAt,
