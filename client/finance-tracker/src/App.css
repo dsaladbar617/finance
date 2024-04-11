@@ -1,12 +1,17 @@
 .header {
+  width: 100vw;
+  background-color: grey;
+}
+
+.header-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  background-color: grey;
   width: 98vw;
   padding: 10px;
   height: 50px;
   margin: 0 auto;
+  background-color: transparent;
 }
 
 .login-container {
@@ -18,6 +23,7 @@
 
 .title {
   font-size: 2.5rem;
+  line-height: normal;
   font-weight: bold;
   color: white;
 }

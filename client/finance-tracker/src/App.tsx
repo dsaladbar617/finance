@@ -4,6 +4,9 @@ import Header from "./components/Header";
 import Home from "./components/Home";
 import SignUp from "./components/SignUp";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Login from "./components/Login";
+import Profile from "./components/Profile";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient();
 
@@ -14,8 +17,10 @@ function App() {
       <main>
         <Route path="/" component={Home} />
         <Route path="/signup" component={SignUp} />
-        <Route path="/home" component={Home} />
+        <Route path="/login" component={Login} />
+        <Route path="/profile/:username" component={Profile} />
       </main>
+      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }

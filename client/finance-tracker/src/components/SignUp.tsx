@@ -1,7 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { useLocation } from "wouter";
+import { UserResponse } from "../types/user";
+import { useLoginMutation } from "../util/useLogin";
 
 type Inputs = {
   email: string;
@@ -12,23 +13,34 @@ type Inputs = {
 };
 
 const SignUp = () => {
-  const [_location, navigate] = useLocation();
-
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
 
-  // console.log(errors);
-  const { mutate, isPending } = useMutation({
-    mutationFn: (data: Inputs) =>
-      axios.post("http://localhost:8080/account/create", data),
-    onSuccess: () => {
-      alert("Account created successfully.");
-      navigate("/home");
+  const { mutate: logInMutate } = useLoginMutation();
+  const { mutate, isPending, isSuccess, data } = useMutation({
+    mutationFn: async (inputs: Inputs) => {
+      const response = await axios.post(
+        "http://localhost:8080/account/create",
+        inputs
+      );
+      return response.data as Promise<UserResponse>;
+    },
+    onSuccess: (data, variables) => {
+      console.log(variables.password);
+      const loginArg = {
+        username: data.username,
+        password: variables.password,
+      };
+      logInMutate(loginArg);
     },
   });
+
+  if (isSuccess) {
+    console.log(data);
+  }
 
   return (
     <div>
