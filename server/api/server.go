@@ -44,8 +44,8 @@ func (server *Server) setupRouter() {
 
 	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
 
-	// router.GET("/account/:username", server.getAccount)
-	authRoutes.GET("/account/:username", server.getAccount)
+	authRoutes.GET("/profile/:username", server.getAccount)
+	authRoutes.DELETE("/account/logout", server.logOutAccount)
 
 	server.router = router
 }
@@ -53,7 +53,7 @@ func (server *Server) setupRouter() {
 func corsMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		ctx.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
+		ctx.Writer.Header().Set("Access-Control-Allow-Methods", "*")
 		ctx.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
 		if ctx.Request.Method == "OPTIONS" {

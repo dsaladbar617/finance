@@ -10,6 +10,27 @@ import (
 	"github.com/google/uuid"
 )
 
+const checkSession = `-- name: CheckSession :one
+SELECT id, username, refresh_token, user_agent, client_ip, is_blocked, expires_at, created_at FROM sessions
+WHERE username = $1 LIMIT 1
+`
+
+func (q *Queries) CheckSession(ctx context.Context, username string) (Session, error) {
+	row := q.db.QueryRowContext(ctx, checkSession, username)
+	var i Session
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.RefreshToken,
+		&i.UserAgent,
+		&i.ClientIp,
+		&i.IsBlocked,
+		&i.ExpiresAt,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const createSession = `-- name: CreateSession :one
 INSERT INTO sessions (
   id,
@@ -56,6 +77,15 @@ func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (S
 		&i.CreatedAt,
 	)
 	return i, err
+}
+
+const deleteSession = `-- name: DeleteSession :exec
+DELETE FROM sessions WHERE username = $1
+`
+
+func (q *Queries) DeleteSession(ctx context.Context, username string) error {
+	_, err := q.db.ExecContext(ctx, deleteSession, username)
+	return err
 }
 
 const getSession = `-- name: GetSession :one

@@ -98,8 +98,6 @@ func (server *Server) getAccount(ctx *gin.Context) {
 		return
 	}
 
-	fmt.Println(req.Username)
-
 	account, err := server.store.GetAccount(ctx, req.Username)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -208,4 +206,36 @@ func (server *Server) loginAccount(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, rsp)
 
+}
+
+type logOutAccountRequest struct {
+}
+
+func (server *Server) logOutAccount(ctx *gin.Context) {
+	var req logOutAccountRequest
+	if err := ctx.ShouldBindHeader(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+	// if req.Username != authPayload.Username {
+	// 	err := errors.New("account doesn't belong to the authenticated user")
+	// 	ctx.JSON(http.StatusUnauthorized, errorResponse(err))
+	// 	return
+	// }
+
+	fmt.Println(authPayload)
+
+	err := server.store.DeleteSession(ctx, authPayload.Username)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	ctx.Status(http.StatusNoContent)
 }
