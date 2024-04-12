@@ -9,25 +9,13 @@ const Login = () => {
     formState: { errors },
   } = useForm<LogInInputs>();
 
-  // const { mutate, isPending } = useMutation({
-  //   mutationFn: (data: LogInInputs) =>
-  //     axios
-  //       .post("http://localhost:8080/account/login", data)
-  //       .then((res) => res.data as LogInResponse),
-  //   onSuccess: (data) => {
-  //     localStorage.setItem("accessToken", data.access_token);
-  //     localStorage.setItem("refreshToken", data.refresh_token);
-  //     navigate(`/profile/${data.user.username}`);
-  //   },
-  // });
-
   const { mutate, isPending } = useLoginMutation();
 
   return (
     <div>
       <form
         onSubmit={handleSubmit((data) => {
-          console.log(data);
+          // console.log(data);
           return mutate(data);
         })}
       >

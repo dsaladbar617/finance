@@ -26,7 +26,6 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     if (error.response.status === 401) {
       const newToken = await refreshToken();
-      console.log(refreshToken);
       localStorage.setItem("accessToken", newToken);
       return axios(error.config);
     }

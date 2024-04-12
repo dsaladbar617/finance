@@ -5,15 +5,15 @@ import { LogInInputs, LogInResponse } from "../types/user";
 
 export const useLoginMutation = () =>
   useMutation({
-    mutationFn: (data: LogInInputs) =>
-      axios
+    mutationFn: async (data: LogInInputs) => {
+      const response = await axios
         .post("http://localhost:8080/account/login", data)
-        .then((res) => res.data as LogInResponse),
+        .then((res) => res.data as LogInResponse);
+      return response;
+    },
     onSuccess: (data) => {
       localStorage.setItem("accessToken", data.access_token);
       localStorage.setItem("refreshToken", data.refresh_token);
       navigate(`/profile/${data.user.username}`);
     },
   });
-
-// export default useLoginMutation;

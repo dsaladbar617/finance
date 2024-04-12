@@ -17,7 +17,7 @@ const Profile = () => {
   } = useQuery({
     queryKey: ["user"],
     queryFn: async () => {
-      const response = await axiosInstance.get(`account/${username}`);
+      const response = await axiosInstance.get(`profile/${username}`);
 
       return response.data as Promise<UserResponse>;
     },
