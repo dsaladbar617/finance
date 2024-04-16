@@ -46,6 +46,7 @@ func (server *Server) setupRouter() {
 
 	authRoutes.GET("/profile/:username", server.getAccount)
 	authRoutes.DELETE("/account/logout", server.logOutAccount)
+	authRoutes.POST("/expense/create", server.createExpense)
 
 	server.router = router
 }

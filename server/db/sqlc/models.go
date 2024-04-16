@@ -18,6 +18,19 @@ type Account struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
+type Expense struct {
+	ID          int64  `json:"id"`
+	AccountID   int64  `json:"account_id"`
+	CategoryID  int64  `json:"category_id"`
+	Description string `json:"description"`
+	Amount      int64  `json:"amount"`
+}
+
+type ExpenseCategory struct {
+	ID       int64  `json:"id"`
+	Category string `json:"category"`
+}
+
 type Session struct {
 	ID           uuid.UUID `json:"id"`
 	Username     string    `json:"username"`

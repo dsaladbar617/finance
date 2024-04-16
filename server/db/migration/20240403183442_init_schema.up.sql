@@ -1,4 +1,4 @@
-CREATE TABLE "accounts" (
+CREATE TABLE IF NOT EXISTS "accounts" (
   "id" bigserial PRIMARY KEY,
   "username" varchar NOT NULL,
   "first_name" varchar NOT NULL,

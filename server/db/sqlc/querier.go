@@ -11,9 +11,11 @@ import (
 type Querier interface {
 	CheckSession(ctx context.Context, username string) (Session, error)
 	CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error)
+	CreateExpense(ctx context.Context, arg CreateExpenseParams) (Expense, error)
 	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	DeleteSession(ctx context.Context, username string) error
 	GetAccount(ctx context.Context, username string) (Account, error)
+	GetExpense(ctx context.Context, id int64) (Expense, error)
 	GetSession(ctx context.Context, id uuid.UUID) (Session, error)
 }
 
