@@ -1,29 +1,20 @@
-// import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-// import axios from "axios";
-import { useLocation } from "wouter";
 import { UserResponse } from "../types/user";
 import { axiosInstance } from "../util/axios";
+import { useParams } from "react-router-dom";
 
 const Profile = () => {
-  const [location, _setLocation] = useLocation();
+  const params = useParams();
 
-  const username = location.split("/")[2];
-
-  const {
-    data: userData,
-    isSuccess,
-    isPending,
-  } = useQuery({
+  const { data: userData, isPending } = useQuery({
     queryKey: ["user"],
     queryFn: async () => {
-      const response = await axiosInstance.get(`profile/${username}`);
+      const response = await axiosInstance.get(`profile/${params.username}`);
 
       return response.data as Promise<UserResponse>;
     },
   });
 
-  if (isSuccess) console.log(userData);
   return (
     <div>
       {isPending && <h2>Loading</h2>}

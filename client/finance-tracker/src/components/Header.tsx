@@ -1,31 +1,15 @@
-import { Link } from "wouter";
-import { navigate } from "wouter/use-browser-location";
+import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../util/axios";
-import { Dispatch, SetStateAction } from "react";
-// import { useEffect, useState } from "react";
-// import { axiosInstance } from "../util/axios";
+import { AuthContext } from "../contexts/AuthContext";
+import { useContext } from "react";
 
-type HeaderProps = {
-  isAuth: boolean;
-  setIsAuth: Dispatch<SetStateAction<boolean>>;
-};
-
-const Header = ({ isAuth, setIsAuth }: HeaderProps) => {
-  // const [isAuth, setIsAuth] = useState(false);
-
-  // const accessToken = localStorage.getItem("accessToken");
-  // useEffect(() => {
-  //   if (accessToken) {
-  //     setIsAuth(true);
-  //   } else {
-  //     setIsAuth(false);
-  //   }
-  // }, [accessToken]);
-
+const Header = () => {
+  const { isAuth, setIsAuth } = useContext(AuthContext);
+  const nav = useNavigate();
   return (
     <div className="header">
       <div className="header-container">
-        <Link href="/">
+        <Link to="/">
           <div className="title">Finance</div>
         </Link>
         <div className="login-container">
@@ -36,18 +20,18 @@ const Header = ({ isAuth, setIsAuth }: HeaderProps) => {
                   await axiosInstance.delete("/account/logout");
                   localStorage.removeItem("accessToken");
                   localStorage.removeItem("refreshToken");
+                  nav("/");
                   setIsAuth(false);
-                  navigate("/");
                 }}
               >
                 Log Out
               </button>
             ) : (
               <>
-                <Link href="/signup">
+                <Link to="/signup">
                   <button>Sign up</button>
                 </Link>
-                <Link href="/login">
+                <Link to="/login">
                   <button>Login</button>
                 </Link>
               </>

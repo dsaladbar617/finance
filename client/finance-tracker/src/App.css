@@ -34,3 +34,17 @@
   width: 100%;
   justify-content: space-between;
 }
+
+.sidenav {
+  width: 250px;
+  transition: width 0.3s ease-in-out;
+  height: 100vh;
+  background-color: rgb(10, 25, 41);
+  padding-top: 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.side-button {
+  fill: white;
+}

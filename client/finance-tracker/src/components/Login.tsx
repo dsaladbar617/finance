@@ -15,7 +15,6 @@ const Login = () => {
     <div>
       <form
         onSubmit={handleSubmit((data) => {
-          // console.log(data);
           return mutate(data);
         })}
       >
