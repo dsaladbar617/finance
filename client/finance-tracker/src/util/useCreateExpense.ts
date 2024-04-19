@@ -3,6 +3,7 @@ import { CreateExpenseInputs } from "../types/expense";
 import { axiosInstance } from "./axios";
 import { queryClient } from "../util/queryClient";
 
+// React mutation to create an expense. Will invalidate current expenses data used to populate expense table.
 export const useCreateExpense = () => {
   return useMutation({
     mutationFn: async (data: CreateExpenseInputs) => {

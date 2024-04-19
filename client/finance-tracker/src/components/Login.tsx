@@ -9,6 +9,7 @@ const Login = () => {
     formState: { errors },
   } = useForm<LogInInputs>();
 
+  // login mutation from util/useLogin.ts
   const { mutate, isPending } = useLoginMutation();
 
   return (

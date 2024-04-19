@@ -1,3 +1,4 @@
+// Used to populate sidebar with items for navigation.
 export const navData = [
   {
     id: 0,

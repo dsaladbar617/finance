@@ -6,6 +6,7 @@ import { useCreateExpense } from "../util/useCreateExpense";
 import styles from "../styles/expenses.module.css";
 
 const Expenses = () => {
+  // Get expense categories to populate category select in create expense form.
   const { data: expenseCategories } = useQuery({
     queryKey: ["expense_categories"],
     queryFn: async () => {
@@ -15,6 +16,7 @@ const Expenses = () => {
     },
   });
 
+  // Gets an array of all expenses for the user to display in the table below.
   const { data: expenses, isPending: expensePending } = useQuery({
     queryKey: ["expenses"],
     queryFn: async () => {
@@ -31,6 +33,7 @@ const Expenses = () => {
     reset,
   } = useForm<CreateExpenseInputs>();
 
+  // Create Expense Mutation from util/useCreateExpense.ts
   const { mutate, isPending } = useCreateExpense();
 
   return (

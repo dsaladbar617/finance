@@ -9,6 +9,7 @@ type AuthContext = {
   setIsAuth: (newState: boolean) => void;
 };
 
+// Creates initial data for the auth context. Will check to see if the accessToken exists.
 const initialValue = {
   isAuth: !!localStorage.getItem("accessToken"),
   setIsAuth: () => {},

@@ -2,10 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { UserResponse } from "../types/user";
 import { axiosInstance } from "./axios";
 
-// type GetUserDataParams = {
-//   username?: string;
-// };
-
+// Used to get account's user data.
 const useGetUserData = () =>
   useQuery({
     queryKey: ["user"],

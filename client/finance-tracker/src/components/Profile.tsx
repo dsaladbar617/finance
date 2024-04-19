@@ -3,6 +3,7 @@ import { UserResponse } from "../types/user";
 import { axiosInstance } from "../util/axios";
 
 const Profile = () => {
+  // Get the accounts user data to display on the profile page.
   const {
     data: userData,
     isPending,
@@ -16,9 +17,10 @@ const Profile = () => {
     },
   });
 
+  // Get the date from the get query above and convert it to locale string.
   let date;
   if (userData?.created_at) {
-    date = new Date(userData?.created_at.toLocaleString());
+    date = new Date(userData.created_at.toLocaleString());
   }
 
   return (

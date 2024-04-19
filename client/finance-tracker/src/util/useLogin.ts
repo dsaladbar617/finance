@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
+// Creates a session for the user and on success will place auth tokens in local storage set isAuth in AuthContext to true and navigate to user's profile page.
 export const useLoginMutation = () => {
   const nav = useNavigate();
   const { setIsAuth } = useContext(AuthContext);

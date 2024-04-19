@@ -19,7 +19,9 @@ const SignUp = () => {
     formState: { errors },
   } = useForm<SignUpInputs>();
 
+  // Log in mutation from util/useLogin.ts
   const { mutate: logInMutate } = useLoginMutation();
+  // Create account and on success will log in the user with the username and password input by the user.
   const { mutate, isPending } = useMutation({
     mutationFn: async (inputs: SignUpInputs) => {
       const response = await axios.post(
@@ -36,10 +38,6 @@ const SignUp = () => {
       logInMutate(loginArg);
     },
   });
-
-  // if (isSuccess) {
-  //   console.log(data);
-  // }
 
   return (
     <div>
