@@ -2,7 +2,6 @@ package api
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -47,6 +46,7 @@ func (server *Server) createAccount(ctx *gin.Context) {
 		return
 	}
 
+	// hash the password to store encrypted password in the account table.
 	hashedPassword, err := util.HashPassword(req.Password)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
@@ -97,6 +97,7 @@ func (server *Server) getAccount(ctx *gin.Context) {
 		return
 	}
 
+	// Use the auth token that will be used to get the account data using the username.
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 
 	account, err := server.store.GetAccount(ctx, authPayload.Username)
@@ -152,12 +153,14 @@ func (server *Server) loginAccount(ctx *gin.Context) {
 		return
 	}
 
+	// Check that the password sent by the user log in matches the hashed password stored in the account table.
 	err = util.CheckPassword(req.Password, account.Password)
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
 		return
 	}
 
+	// Create accessToken to send back to the client.
 	accessToken, accessPayload, err := server.tokenMaker.CreateToken(
 		account.Username,
 		server.config.AccessTokenDuration,
@@ -167,6 +170,7 @@ func (server *Server) loginAccount(ctx *gin.Context) {
 		return
 	}
 
+	// Create the refresh token to send back to the client.
 	refreshToken, refreshPayload, err := server.tokenMaker.CreateToken(
 		account.Username,
 		server.config.RefreshTokenDuration,
@@ -213,9 +217,8 @@ func (server *Server) logOutAccount(ctx *gin.Context) {
 		return
 	}
 
+	// Use the auth token to get the username to delete the users session in the session table.
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
-
-	fmt.Println(authPayload)
 
 	err := server.store.DeleteSession(ctx, authPayload.Username)
 	if err != nil {

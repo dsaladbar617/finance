@@ -2,7 +2,6 @@ package api
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -27,6 +26,7 @@ func (server *Server) createExpense(ctx *gin.Context) {
 		return
 	}
 
+	// Use auth token to get username to get the account information to create an expense for the specified account.
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 
 	account, err := server.store.GetAccount(ctx, authPayload.Username)
@@ -50,8 +50,6 @@ func (server *Server) createExpense(ctx *gin.Context) {
 		DateAdded:   req.DateAdded.Add(time.Second),
 	}
 
-	fmt.Println(arg)
-
 	expense, err := server.store.CreateExpense(ctx, arg)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
@@ -63,6 +61,7 @@ func (server *Server) createExpense(ctx *gin.Context) {
 }
 
 func (server *Server) listExpenses(ctx *gin.Context) {
+	// Use auth token to get username to return all expenses that are created by the specified account.
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 
 	account, err := server.store.GetAccount(ctx, authPayload.Username)
