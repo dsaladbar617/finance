@@ -16,7 +16,9 @@ type Querier interface {
 	DeleteSession(ctx context.Context, username string) error
 	GetAccount(ctx context.Context, username string) (Account, error)
 	GetExpense(ctx context.Context, id int64) (Expense, error)
+	GetExpenseCategories(ctx context.Context) ([]ExpenseCategory, error)
 	GetSession(ctx context.Context, id uuid.UUID) (Session, error)
+	ListExpenses(ctx context.Context, arg ListExpensesParams) ([]ListExpensesRow, error)
 }
 
 var _ Querier = (*Queries)(nil)

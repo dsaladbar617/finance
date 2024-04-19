@@ -5,6 +5,7 @@ package db
 
 import (
 	"context"
+	"time"
 )
 
 const createExpense = `-- name: CreateExpense :one
@@ -12,18 +13,20 @@ INSERT INTO expenses (
   account_id,
   category_id,
   description,
-  amount
+  amount,
+  date_added
 ) VALUES (
-  $1, $2, $3, $4
+  $1, $2, $3, $4, $5
 )
-RETURNING id, account_id, category_id, description, amount
+RETURNING id, account_id, category_id, description, amount, date_added
 `
 
 type CreateExpenseParams struct {
-	AccountID   int64  `json:"account_id"`
-	CategoryID  int64  `json:"category_id"`
-	Description string `json:"description"`
-	Amount      int64  `json:"amount"`
+	AccountID   int64     `json:"account_id"`
+	CategoryID  int64     `json:"category_id"`
+	Description string    `json:"description"`
+	Amount      string    `json:"amount"`
+	DateAdded   time.Time `json:"date_added"`
 }
 
 func (q *Queries) CreateExpense(ctx context.Context, arg CreateExpenseParams) (Expense, error) {
@@ -32,6 +35,7 @@ func (q *Queries) CreateExpense(ctx context.Context, arg CreateExpenseParams) (E
 		arg.CategoryID,
 		arg.Description,
 		arg.Amount,
+		arg.DateAdded,
 	)
 	var i Expense
 	err := row.Scan(
@@ -40,12 +44,13 @@ func (q *Queries) CreateExpense(ctx context.Context, arg CreateExpenseParams) (E
 		&i.CategoryID,
 		&i.Description,
 		&i.Amount,
+		&i.DateAdded,
 	)
 	return i, err
 }
 
 const getExpense = `-- name: GetExpense :one
-Select id, account_id, category_id, description, amount FROM expenses
+Select id, account_id, category_id, description, amount, date_added FROM expenses
 WHERE id = $1 LIMIT 1
 `
 
@@ -58,6 +63,88 @@ func (q *Queries) GetExpense(ctx context.Context, id int64) (Expense, error) {
 		&i.CategoryID,
 		&i.Description,
 		&i.Amount,
+		&i.DateAdded,
 	)
 	return i, err
+}
+
+const getExpenseCategories = `-- name: GetExpenseCategories :many
+SELECT id, category FROM expense_categories
+ORDER BY id
+`
+
+func (q *Queries) GetExpenseCategories(ctx context.Context) ([]ExpenseCategory, error) {
+	rows, err := q.db.QueryContext(ctx, getExpenseCategories)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ExpenseCategory{}
+	for rows.Next() {
+		var i ExpenseCategory
+		if err := rows.Scan(&i.ID, &i.Category); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listExpenses = `-- name: ListExpenses :many
+Select expenses.id, description, amount, date_added, category
+FROM expenses
+JOIN expense_categories ON expenses.category_id = expense_categories.id
+WHERE expenses.account_id = $1
+ORDER BY expenses.id
+LIMIT $2
+OFFSET $3
+`
+
+type ListExpensesParams struct {
+	AccountID int64 `json:"account_id"`
+	Limit     int32 `json:"limit"`
+	Offset    int32 `json:"offset"`
+}
+
+type ListExpensesRow struct {
+	ID          int64     `json:"id"`
+	Description string    `json:"description"`
+	Amount      string    `json:"amount"`
+	DateAdded   time.Time `json:"date_added"`
+	Category    string    `json:"category"`
+}
+
+func (q *Queries) ListExpenses(ctx context.Context, arg ListExpensesParams) ([]ListExpensesRow, error) {
+	rows, err := q.db.QueryContext(ctx, listExpenses, arg.AccountID, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ListExpensesRow{}
+	for rows.Next() {
+		var i ListExpensesRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Description,
+			&i.Amount,
+			&i.DateAdded,
+			&i.Category,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

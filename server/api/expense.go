@@ -1,27 +1,24 @@
 package api
 
 import (
+	"database/sql"
+	"fmt"
 	"net/http"
+	"time"
 
 	db "github.com/dsaladbar617/finance-tracker/db/sqlc"
 	"github.com/dsaladbar617/finance-tracker/token"
 	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
+	"github.com/shopspring/decimal"
 )
 
 type createExpenseRequest struct {
-	AccountID   int64  `json:"account_id"`
-	CategoryID  int64  `json:"category_id" binding:"required"`
-	Description string `json:"description"`
-	Amount      int64  `json:"amount" binding:"required"`
+	CategoryID  int64           `json:"category_id" binding:"required"`
+	Description string          `json:"description" binding:"required"`
+	Amount      decimal.Decimal `json:"amount" binding:"required"`
+	DateAdded   time.Time       `json:"date_added" binding:"required"`
 }
-
-// type createExpenseResponse struct {
-// 	AccountID   int64  `json:"account_id" binding:"required"`
-// 	CategoryID  string `json:"category_id" binding:"required"`
-// 	Description string `json:"description"`
-// 	Amount      int64  `json:"amount" binding:"required"`
-// }
 
 func (server *Server) createExpense(ctx *gin.Context) {
 	var req createExpenseRequest
@@ -49,8 +46,11 @@ func (server *Server) createExpense(ctx *gin.Context) {
 		AccountID:   account.ID,
 		CategoryID:  req.CategoryID,
 		Description: req.Description,
-		Amount:      req.Amount,
+		Amount:      req.Amount.String(),
+		DateAdded:   req.DateAdded.Add(time.Second),
 	}
+
+	fmt.Println(arg)
 
 	expense, err := server.store.CreateExpense(ctx, arg)
 	if err != nil {
@@ -60,4 +60,43 @@ func (server *Server) createExpense(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, expense)
 
+}
+
+func (server *Server) listExpenses(ctx *gin.Context) {
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+
+	account, err := server.store.GetAccount(ctx, authPayload.Username)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	arg := db.ListExpensesParams{
+		AccountID: account.ID,
+		Limit:     50,
+		Offset:    0,
+	}
+
+	expenses, err := server.store.ListExpenses(ctx, arg)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, expenses)
+
+}
+
+func (server *Server) getExpenseCategories(ctx *gin.Context) {
+	categories, err := server.store.GetExpenseCategories(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, categories)
 }

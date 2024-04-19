@@ -19,11 +19,12 @@ type Account struct {
 }
 
 type Expense struct {
-	ID          int64  `json:"id"`
-	AccountID   int64  `json:"account_id"`
-	CategoryID  int64  `json:"category_id"`
-	Description string `json:"description"`
-	Amount      int64  `json:"amount"`
+	ID          int64     `json:"id"`
+	AccountID   int64     `json:"account_id"`
+	CategoryID  int64     `json:"category_id"`
+	Description string    `json:"description"`
+	Amount      string    `json:"amount"`
+	DateAdded   time.Time `json:"date_added"`
 }
 
 type ExpenseCategory struct {
