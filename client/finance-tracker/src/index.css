@@ -13,12 +13,22 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-main {
-  width: 95vw;
-  margin: 0 auto;
+.mainClosed {
   background-color: white;
-  height: calc(100dvh - 70px);
+  height: calc(100dvh - 20px);
   color: black;
+  padding: 10px;
+  /* margin-left: 70px; */
+  transition: margin-left 0.3s ease-in-out;
+}
+
+.mainOpen {
+  background-color: white;
+  height: calc(100dvh - 20px);
+  color: black;
+  padding: 10px;
+  /* margin-left: 250px; */
+  transition: margin-left 0.3s ease-in-out;
 }
 
 a {

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { UserResponse } from "../types/user";
 import { useLoginMutation } from "../util/useLogin";
 
-type Inputs = {
+type SignUpInputs = {
   email: string;
   username: string;
   first_name: string;
@@ -17,11 +17,11 @@ const SignUp = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>();
+  } = useForm<SignUpInputs>();
 
   const { mutate: logInMutate } = useLoginMutation();
-  const { mutate, isPending, isSuccess, data } = useMutation({
-    mutationFn: async (inputs: Inputs) => {
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (inputs: SignUpInputs) => {
       const response = await axios.post(
         "http://localhost:8080/account/create",
         inputs
@@ -29,7 +29,6 @@ const SignUp = () => {
       return response.data as Promise<UserResponse>;
     },
     onSuccess: (data, variables) => {
-      console.log(variables.password);
       const loginArg = {
         username: data.username,
         password: variables.password,
@@ -38,9 +37,9 @@ const SignUp = () => {
     },
   });
 
-  if (isSuccess) {
-    console.log(data);
-  }
+  // if (isSuccess) {
+  //   console.log(data);
+  // }
 
   return (
     <div>

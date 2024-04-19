@@ -9,4 +9,9 @@ export const navData = [
     text: "Expenses",
     link: "/expenses",
   },
+  {
+    id: 2,
+    text: "Profile",
+    link: "/profile",
+  },
 ];

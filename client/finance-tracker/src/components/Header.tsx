@@ -9,9 +9,9 @@ const Header = () => {
   return (
     <div className="header">
       <div className="header-container">
-        <Link to="/">
+        {/* <Link to="/">
           <div className="title">Finance</div>
-        </Link>
+        </Link> */}
         <div className="login-container">
           <div className="logins">
             {isAuth ? (

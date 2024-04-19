@@ -1,27 +1,37 @@
 import { useQuery } from "@tanstack/react-query";
 import { UserResponse } from "../types/user";
 import { axiosInstance } from "../util/axios";
-import { useParams } from "react-router-dom";
 
 const Profile = () => {
-  const params = useParams();
-
-  const { data: userData, isPending } = useQuery({
+  const {
+    data: userData,
+    isPending,
+    status,
+  } = useQuery({
     queryKey: ["user"],
     queryFn: async () => {
-      const response = await axiosInstance.get(`profile/${params.username}`);
+      const response = await axiosInstance.get("profile/");
 
       return response.data as Promise<UserResponse>;
     },
   });
 
+  let date;
+  if (userData?.created_at) {
+    date = new Date(userData?.created_at.toLocaleString());
+  }
+
   return (
     <div>
       {isPending && <h2>Loading</h2>}
-      <h2>Name: {`${userData?.first_name} ${userData?.last_name}`}</h2>
-      <h2>Username: {userData?.username}</h2>
-      <h3>Email: {userData?.email}</h3>
-      <h4>Account Created: {userData?.created_at.toLocaleString()}</h4>
+      {status != "error" && (
+        <>
+          <h2>Name: {`${userData?.first_name} ${userData?.last_name}`}</h2>
+          <h2>Username: {userData?.username}</h2>
+          <h3>Email: {userData?.email}</h3>
+          <h4>Account Created: {date?.toDateString()}</h4>
+        </>
+      )}
     </div>
   );
 };

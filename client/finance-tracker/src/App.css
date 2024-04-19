@@ -1,13 +1,12 @@
 .header {
-  width: 100vw;
-  background-color: grey;
+  width: 100%;
+  background-color: rgb(10, 25, 41);
 }
 
 .header-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  width: 98vw;
+  justify-content: flex-end;
   padding: 10px;
   height: 50px;
   margin: 0 auto;
@@ -35,16 +34,8 @@
   justify-content: space-between;
 }
 
-.sidenav {
-  width: 250px;
-  transition: width 0.3s ease-in-out;
-  height: 100vh;
-  background-color: rgb(10, 25, 41);
-  padding-top: 28px;
+.headerPageContainer {
   display: flex;
   flex-direction: column;
-}
-
-.side-button {
-  fill: white;
+  height: 100dvh;
 }

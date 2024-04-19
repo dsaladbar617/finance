@@ -1,0 +1,61 @@
+.sidenav {
+  --sidebarPadding: 20px;
+  position: relative;
+  float: left;
+  width: 250px;
+  transition: width 0.3s ease-in-out;
+  height: 100dvh;
+  background-color: rgb(10, 25, 41);
+  overflow: hidden;
+}
+
+.sidenavClosed {
+  position: relative;
+  float: left;
+  transition: width 0.3s ease-in-out;
+  width: 70px;
+  height: 100vh;
+  background-color: rgb(10, 25, 41);
+}
+
+.navContainer {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  height: calc(100dvh - (70px + var(--sidebarPadding) * 2));
+  padding: var(--sidebarPadding);
+}
+
+.sidebarBtn {
+  background-color: transparent;
+  margin-top: auto;
+  margin-bottom: auto;
+  height: 40px;
+  width: 60px;
+}
+
+.logins {
+  display: flex;
+  height: fit-content;
+  justify-content: space-around;
+}
+
+.titleBtn {
+  display: flex;
+  justify-content: space-between;
+  transition: all 0.3ms ease-in-out;
+  height: 70px;
+}
+
+.title {
+  margin: auto 0;
+  margin-left: 10px;
+  transition: all 0.3ms ease-in-out;
+  font-size: xx-large;
+}
+
+.navLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

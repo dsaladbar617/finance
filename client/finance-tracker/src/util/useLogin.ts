@@ -20,7 +20,7 @@ export const useLoginMutation = () => {
       localStorage.setItem("accessToken", data.access_token);
       localStorage.setItem("refreshToken", data.refresh_token);
       setIsAuth(true);
-      nav(`/profile/${data.user.username}`);
+      nav("/profile");
     },
   });
 };
